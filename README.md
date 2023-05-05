@@ -41,7 +41,9 @@ You can save the output from console to a file with `Embed2C ... > EmbeddedFiles
 To use the variable in other files, just forward declarate like this
 ```c
 extern const uint8_t EmbeddedFile[];
+extern const size_t EmbeddedFile_size;
 extern const uint8_t EmbeddedFile2[];
+extern const size_t EmbeddedFile2_size;
 ```
 or put them in a header file
 
