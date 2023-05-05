@@ -25,12 +25,15 @@ which will output to console:
 
 ```c
 #include <stdint.h>
+#include <stddef.h>
 const uint8_t EmbeddedFile[] = {
     //Contents...
 };
+const size_t EmbeddedFile_size;
 const uint8_t EmbeddedFile2[] = {
     //Contents...
 };
+const size_t EmbeddedFile2_size;
 ```
 
 You can save the output from console to a file with `Embed2C ... > EmbeddedFiles.c`
