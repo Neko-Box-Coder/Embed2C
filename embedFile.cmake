@@ -1,17 +1,12 @@
 
 function(GET_EXEC_PATH OUT_PATH)
-    # MSVC
-    #file (SIZE "${CMAKE_CURRENT_LIST_DIR}/Src/OpenDrawer/CLUtil/Kernels.c" embeddedKernelSize)
-    
-    #if(embeddedKernelSize GREATER 1024)
-    #    return()
-    #endif()
-    
     if(WIN32)
         file(GLOB_RECURSE EMBED_EXEC_PATH "${CMAKE_CURRENT_BINARY_DIR}/*/Embed2C.exe")
     else()
         file(GLOB_RECURSE EMBED_EXEC_PATH "${CMAKE_CURRENT_BINARY_DIR}/*/Embed2C")
     endif()
+    
+    list(LENGTH EMBED_EXEC_PATH EMBED_EXEC_PATH_LENGTH)
     
     if(EMBED_EXEC_PATH STREQUAL "")
         if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" OR CMAKE_C_COMPILER_ID STREQUAL "MSVC")
@@ -20,6 +15,8 @@ function(GET_EXEC_PATH OUT_PATH)
             message(WARNING "Embed2C not found, please run \"cmake --build . --target Embed2C\" in the build folder")
         endif()
         set(OUT_PATH "" PARENT_SCOPE)
+    elseif(NOT EMBED_EXEC_PATH_LENGTH EQUAL 1)
+        message(FATAL_ERROR "More than 1 Embed2C executable found: ${EMBED_EXEC_PATH}")
     else()
         set(${OUT_PATH} ${EMBED_EXEC_PATH} PARENT_SCOPE)
     endif()
@@ -53,11 +50,11 @@ function(EMBED_FILES OUTPUT_FILE_PATH)
     execute_process(OUTPUT_FILE         ${OUTPUT_FILE_PATH}
                     RESULT_VARIABLE     RET
                     COMMAND             ${EMBED_PATH} ${EMBED_COMMAND_ARGS})
-    #message("Ran command ${EMBED_PATH} ${PRINT_EMBED_COMMAND_ARGS}")
 
     if(NOT RET EQUAL "0")
         message("RET: ${RET}")
         message(FATAL_ERROR "Failed to embed files")
+        message("Ran command ${EMBED_PATH} ${PRINT_EMBED_COMMAND_ARGS}")
     endif()
 endfunction()
 
