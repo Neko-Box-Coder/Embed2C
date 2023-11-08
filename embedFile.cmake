@@ -22,39 +22,26 @@ function(GET_EXEC_PATH OUT_PATH)
     endif()
 endfunction()
 
-function(EMBED_FILES OUTPUT_FILE_PATH)
-    #file(   COPY "${embedPath}" 
-    #        DESTINATION "${CMAKE_CURRENT_LIST_DIR}/"
-    #        FILE_PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
-    
-    set(EMBED_PATH "")
-    
-    GET_EXEC_PATH(EMBED_PATH)
-    #message("EMBED_PATH: ${EMBED_PATH}")
-    #message("OUTPUT_FILE_PATH: ${OUTPUT_FILE_PATH}")
-    
+function(EMBED_FILES EMBED_PATH OUTPUT_FILE_PATH FILES_TO_EMBED)
     if(EMBED_PATH STREQUAL "")
         message(WARNING "Failed to run embed2C")
         return()
     endif()
     
-    set(EMBED_COMMAND_ARGS)
     set(PRINT_EMBED_COMMAND_ARGS)
-    math(EXPR LOOP_ARGC "${ARGC} - 1")
-    foreach(INDEX RANGE 1 ${LOOP_ARGC})
-        list(GET ARGV ${INDEX} CURRENT)
-        set(EMBED_COMMAND_ARGS "${EMBED_COMMAND_ARGS};${CURRENT}")
-        set(PRINT_EMBED_COMMAND_ARGS "${PRINT_EMBED_COMMAND_ARGS} \"${CURRENT}\"")
+    
+    foreach(FILE_TO_EMBED ${FILES_TO_EMBED})
+        set(PRINT_EMBED_COMMAND_ARGS "${PRINT_EMBED_COMMAND_ARGS} \"${FILE_TO_EMBED}\"")
     endforeach()
     
     execute_process(OUTPUT_FILE         ${OUTPUT_FILE_PATH}
                     RESULT_VARIABLE     RET
-                    COMMAND             ${EMBED_PATH} ${EMBED_COMMAND_ARGS})
+                    COMMAND             ${EMBED_PATH} ${FILES_TO_EMBED})
 
     if(NOT RET EQUAL "0")
         message("RET: ${RET}")
-        message(FATAL_ERROR "Failed to embed files")
         message("Ran command ${EMBED_PATH} ${PRINT_EMBED_COMMAND_ARGS}")
+        message(FATAL_ERROR "Failed to embed files")
     endif()
 endfunction()
 

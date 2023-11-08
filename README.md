@@ -60,11 +60,20 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Path/To/Embed2C" EXCLUDE_FROM_ALL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/Path/To/Embed2C/embedFile.cmake")
 
-EMBED_FILES("${CMAKE_CURRENT_LIST_DIR}/Path/To/Output/File.c"
-            "${CMAKE_CURRENT_LIST_DIR}/Path/To/File/To/Embed"
-            "EmbedVariableName"
-            "${CMAKE_CURRENT_LIST_DIR}/Path/To/File2/To/Embed"
-            "Embed2VariableName") #etc...
+# First Get the embed executable path
+set(EMBED_EXEC_PATH "")
+GET_EXEC_PATH(EMBED_EXEC_PATH)
+
+set(FILES_TO_EMBED "${CMAKE_CURRENT_LIST_DIR}/Path/To/File/To/Embed"
+                    "EmbedVariableName"
+                    "${CMAKE_CURRENT_LIST_DIR}/Path/To/File2/To/Embed"
+                    "Embed2VariableName"
+                    # etc...
+                    )
+
+EMBED_FILES("${EMBED_EXEC_PATH}"
+            "${CMAKE_CURRENT_LIST_DIR}/Path/To/Output/File.c"
+            "${FILES_TO_EMBED}")
 #...
 ```
 
