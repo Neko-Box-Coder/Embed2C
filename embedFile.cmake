@@ -31,8 +31,14 @@ function(EMBED_FILES EMBED_PATH OUTPUT_FILE_PATH FILES_TO_EMBED)
     set(PRINT_EMBED_COMMAND_ARGS)
     
     foreach(FILE_TO_EMBED ${FILES_TO_EMBED})
-        set(PRINT_EMBED_COMMAND_ARGS "${PRINT_EMBED_COMMAND_ARGS} \"${FILE_TO_EMBED}\"")
+        set(PRINT_EMBED_COMMAND_ARGS "${PRINT_EMBED_COMMAND_ARGS}\"${FILE_TO_EMBED}\" ")
     endforeach()
+    
+    get_filename_component(OUTPUT_FILE_DIR ${OUTPUT_FILE_PATH} DIRECTORY)
+    
+    if(NOT EXISTS ${OUTPUT_FILE_DIR})
+        message(FATAL_ERROR "The directory ${OUTPUT_FILE_DIR} does not exist")
+    endif()
     
     execute_process(OUTPUT_FILE         ${OUTPUT_FILE_PATH}
                     RESULT_VARIABLE     RET
@@ -40,6 +46,7 @@ function(EMBED_FILES EMBED_PATH OUTPUT_FILE_PATH FILES_TO_EMBED)
 
     if(NOT RET EQUAL "0")
         message("RET: ${RET}")
+        message("OUTPUT_FILE_PATH: ${OUTPUT_FILE_PATH}")
         message("Ran command ${EMBED_PATH} ${PRINT_EMBED_COMMAND_ARGS}")
         message(FATAL_ERROR "Failed to embed files")
     endif()
