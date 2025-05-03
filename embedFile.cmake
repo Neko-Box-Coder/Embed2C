@@ -48,7 +48,7 @@ function(EMBED_FILES EMBED_PATH OUTPUT_FILE_PATH FILES_TO_EMBED)
         message("RET: ${RET}")
         message("OUTPUT_FILE_PATH: ${OUTPUT_FILE_PATH}")
         message("Ran command ${EMBED_PATH} ${PRINT_EMBED_COMMAND_ARGS}")
-        message(FATAL_ERROR "Failed to embed files")
+        message(FATAL_ERROR "Failed to embed files, see error message in ${OUTPUT_FILE_PATH}")
     endif()
 endfunction()
 
